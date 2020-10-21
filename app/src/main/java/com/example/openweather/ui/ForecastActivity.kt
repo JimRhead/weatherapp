@@ -1,16 +1,24 @@
-package com.example.openweather
+package com.example.openweather.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.forcast_activity.*
+import com.example.openweather.R
+import com.example.openweather.model.repository.WeatherForecastRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_forecast.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ForecastActivity: AppCompatActivity() {
+
+    @Inject
+    lateinit var weatherForecastRepository: WeatherForecastRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.forcast_activity)
+        setContentView(R.layout.activity_forecast)
         val cityName = intent.getStringExtra(EXTRA_MESSAGE)
         forecastCityName.text = cityName
     }
