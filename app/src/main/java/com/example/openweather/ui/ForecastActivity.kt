@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.openweather.R
+import com.example.openweather.ui.adapter.WeatherListAdapter
 import com.example.openweather.viewmodel.Status
 import com.example.openweather.viewmodel.WeatherForecastViewModel
 import com.example.openweather.viewmodel.WeatherForecastViewModelFactory
@@ -22,9 +25,14 @@ class ForecastActivity: AppCompatActivity() {
 
     private lateinit var viewModel : WeatherForecastViewModel
 
+    private val weatherListAdapter: WeatherListAdapter = WeatherListAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
+
+        setupUI()
+
         val cityName = intent.getStringExtra(EXTRA_MESSAGE)
 
         viewModel = weatherForecastViewModelFactory.create(WeatherForecastViewModel::class.java)
@@ -39,8 +47,8 @@ class ForecastActivity: AppCompatActivity() {
                             Status.SUCCESS -> {
                                 Log.d(TAG, "Success..." + result.data)
                                 result.data?.let { weatherData ->
-                                    // use the data
-
+                                    weatherListAdapter.setData(weatherData.list)
+                                    forecastCityName.text = "${weatherData.city} ${weatherData.country}"
                                 }
                             }
                             Status.ERROR -> {
@@ -52,9 +60,17 @@ class ForecastActivity: AppCompatActivity() {
 
         }
 
-
-        forecastCityName.text = cityName
     }
+
+    private fun setupUI() {
+        weatherForecastList.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(this.context, LinearLayoutManager.VERTICAL))
+            adapter = weatherListAdapter
+        }
+    }
+
 
     companion object{
         @JvmStatic
