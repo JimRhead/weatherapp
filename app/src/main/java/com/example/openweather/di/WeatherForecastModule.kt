@@ -5,6 +5,7 @@ import com.example.openweather.model.api.WeatherForecastAPI
 import com.example.openweather.model.mapper.WeatherForecastResponseMapper
 import com.example.openweather.model.repository.OpenWeatherForecastRepository
 import com.example.openweather.model.repository.WeatherForecastRepository
+import com.example.openweather.viewmodel.WeatherForecastViewModelFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(ApplicationComponent::class)
 
 object WeatherForecastModule {
+
+    @Provides
+    fun provideWeatherForecastViewModelFactory(WeatherForecastRepository: WeatherForecastRepository) : WeatherForecastViewModelFactory
+            = WeatherForecastViewModelFactory(WeatherForecastRepository)
 
     @Provides
     fun provideWeatherForecastResponseMapper(): WeatherForecastResponseMapper = OpenWeatherForecastResponseMapper()
